@@ -403,6 +403,7 @@ void LitWavesApp::UpdateObjectCBs(const GameTimer& gt)
 			ObjectConstants objConstants;
 			XMStoreFloat4x4(&objConstants.World, XMMatrixTranspose(world));
 			currObjectCB->CopyData(e->ObjCBIndex, objConstants);
+			//currObjectCB->NumDirtyFrames = gNumFrameResources;
 
 			// Next FrameResource need to be updated too.
 			e->NumFramesDirty--;
