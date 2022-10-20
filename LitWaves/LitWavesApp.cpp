@@ -107,6 +107,8 @@ private:
 	int mCurrFrameResourceIndex = 0;
 
 	UINT mCbvSrvDescriptorSize = 0;
+	XMVECTOR lightDir;
+	float dir_light;
 
 	ComPtr<ID3D12RootSignature> mRootSignature = nullptr;
 
@@ -268,7 +270,7 @@ void LitWavesApp::Draw(const GameTimer& gt)
 
 	// Clear the back buffer and depth buffer.
 
-	XMVECTORF32 Sky_Color = { { { 0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f } } };
+	XMVECTORF32 Sky_Color = { { { 0.000000000f,  dir_light * -1 * 0.8, dir_light * -1, 1.000000000f } } };
 	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Sky_Color, 0, nullptr);
 	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
@@ -460,9 +462,9 @@ void LitWavesApp::UpdateMainPassCB(const GameTimer& gt)
 
 	//XMVECTOR lightDir = -MathHelper::SphericalToCartesian(1.0f, mSunTheta, mSunPhi);
 
-	float dir_light = cos(gt.TotalTime() * 0.5);
+	dir_light = cos(gt.TotalTime() * 0.5);
 	float dir_light_2 = sin(gt.TotalTime() * 0.5) * -1;
-	XMVECTOR lightDir = { 0.0f,dir_light, dir_light_2 };
+	lightDir = { 0.0f,dir_light, dir_light_2 };
 
 	XMStoreFloat3(&mMainPassCB.Lights[0].Direction, lightDir);
 	mMainPassCB.Lights[0].Strength = { 2.0f, 2.0f, 2.0f };
