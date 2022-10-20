@@ -74,6 +74,7 @@ struct VertexOut
   float3 NormalW : NORMAL;
   float4 Color : COLOR;
   float4 Color2 : COLOR2;
+  float3 lightVec : LIGHTVEC;
 };
 
 VertexOut VS(VertexIn vin)
@@ -102,7 +103,7 @@ VertexOut VS(VertexIn vin)
   vout.Color2 = test_color_2;
 
 
-
+  vout.lightVec = -gLights[0].Direction;
 
   return vout;
 }
@@ -135,7 +136,22 @@ float4 test_gDiffuseAlbedo = pin.Color2;
     // Common convention to take alpha from diffuse material.
     litColor.a = gDiffuseAlbedo.a;
 
-    return litColor;
+
+    float4 toon_color = litColor;
+
+    float toon_intensity = dot(pin.lightVec, pin.NormalW);
+
+    if (toon_intensity > 0.95)
+      toon_color *= 0.95;
+    else if (toon_intensity > 0.5)
+      toon_color *= 0.5;
+    else if (toon_intensity > 0.25)
+      toon_color *= 0.25;
+    else
+      toon_color *= 0.1;
+
+
+    return toon_color;
 }
 
 

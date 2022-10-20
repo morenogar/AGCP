@@ -76,6 +76,7 @@ float3 ComputeDirectionalLight(Light L, Material mat, float3 normal, float3 toEy
 //---------------------------------------------------------------------------------------
 // Evaluates the lighting equation for point lights.
 //---------------------------------------------------------------------------------------
+
 float3 ComputePointLight(Light L, Material mat, float3 pos, float3 normal, float3 toEye)
 {
     // The vector from the surface to the light.
@@ -96,7 +97,7 @@ float3 ComputePointLight(Light L, Material mat, float3 pos, float3 normal, float
     float3 lightStrength = L.Strength * ndotl;
 
     // Attenuate light by distance.
-    float att = CalcAttenuation(d, L.FalloffStart, L.FalloffEnd);
+    float att = 1.0 / (/*light.constant*/ 0.001f + /*light.linear*/ 0.09f * d + /*light.quadratic*/ 0.032f * (d * d));
     lightStrength *= att;
 
     return BlinnPhong(lightStrength, lightVec, normal, toEye, mat);
@@ -125,12 +126,20 @@ float3 ComputeSpotLight(Light L, Material mat, float3 pos, float3 normal, float3
     float3 lightStrength = L.Strength * ndotl;
 
     // Attenuate light by distance.
-    float att = CalcAttenuation(d, L.FalloffStart, L.FalloffEnd);
-    lightStrength *= att;
+    float att = 1.0 / (/*light.constant*/ 0.001f + /*light.linear*/ 0.09f * d + /*light.quadratic*/ 0.032f * (d * d));
 
     // Scale by spotlight
     float spotFactor = pow(max(dot(-lightVec, L.Direction), 0.0f), L.SpotPower);
-    lightStrength *= spotFactor;
+
+    //Open gl
+
+    float theta = dot(d, normalize(-L.Direction));
+    float epsilon = /*light.inner_coone*/ 0.91 - /*light.outer_coone*/0.82;
+    float intensity = clamp((theta - /*light.outer_coone*/0.82) / epsilon, 0.0, 1.0);
+
+
+
+    lightStrength *= att * intensity * spotFactor;
 
     return BlinnPhong(lightStrength, lightVec, normal, toEye, mat);
 }

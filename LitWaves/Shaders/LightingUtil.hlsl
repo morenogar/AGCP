@@ -55,6 +55,21 @@ float3 BlinnPhong(float3 lightStrength, float3 lightVec, float3 normal, float3 t
     // doing LDR rendering.  So scale it down a bit.
     specAlbedo = specAlbedo / (specAlbedo + 1.0f);
 
+    //float3 toon_color = { mat.DiffuseAlbedo.r, mat.DiffuseAlbedo.g,  mat.DiffuseAlbedo.b };
+
+    //float toon_intensity = dot(lightVec, normal);
+
+    //if (toon_intensity > 0.95)
+    //  toon_color = (mat.DiffuseAlbedo.r * 0.8f, mat.DiffuseAlbedo.g * 0.8f, mat.DiffuseAlbedo.b * 0.8f);
+    //else if (toon_intensity > 0.5)
+    //  toon_color = (mat.DiffuseAlbedo.r * 0.6f, mat.DiffuseAlbedo.g * 0.6f, mat.DiffuseAlbedo.b * 0.6f);
+    //else if (toon_intensity > 0.25)
+    //  toon_color = (mat.DiffuseAlbedo.r * 0.3f, mat.DiffuseAlbedo.g * 0.3f, mat.DiffuseAlbedo.b * 0.3f);
+    //else
+    //  toon_color = (mat.DiffuseAlbedo.r * 0.1f, mat.DiffuseAlbedo.g * 0.1f, mat.DiffuseAlbedo.b * 0.1f);
+
+    //return (toon_color + specAlbedo) * lightStrength;
+
     return (mat.DiffuseAlbedo.rgb + specAlbedo) * lightStrength;
 }
 

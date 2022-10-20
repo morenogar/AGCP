@@ -459,7 +459,7 @@ void LitWavesApp::UpdateMainPassCB(const GameTimer& gt)
 	mMainPassCB.FarZ = 1000.0f;
 	mMainPassCB.TotalTime = gt.TotalTime();
 	mMainPassCB.DeltaTime = gt.DeltaTime();
-	mMainPassCB.AmbientLight = { 0.7f, 0.7f, 0.7f, 1.0f };
+	mMainPassCB.AmbientLight = { 0.9f, 0.9f, 0.9f, 1.0f };
 
 	//XMVECTOR lightDir = -MathHelper::SphericalToCartesian(1.0f, mSunTheta, mSunPhi);
 
@@ -468,7 +468,7 @@ void LitWavesApp::UpdateMainPassCB(const GameTimer& gt)
 	lightDir = { 0.0f,dir_light, dir_light_2 };
 
 	XMStoreFloat3(&mMainPassCB.Lights[0].Direction, lightDir);
-	mMainPassCB.Lights[0].Strength = { 2.0f, 2.0f, 2.0f };
+	mMainPassCB.Lights[0].Strength = { 0.8f,0.8f, 0.8f };
 
 	//mMainPassCB.Lights[1].Position = { 0.0, 5, 0.0 };
 	//mMainPassCB.Lights[1].FalloffStart = 1;
@@ -755,7 +755,7 @@ void LitWavesApp::BuildMaterials()
 	auto grass = std::make_unique<Material>();
 	grass->Name = "grass";
 	grass->MatCBIndex = 0;
-	grass->DiffuseAlbedo = XMFLOAT4(0.2f, 0.6f, 0.2f, 1.0f);
+	grass->DiffuseAlbedo = XMFLOAT4(0.1f, 0.3f, 0.1f, 1.0f);
 	grass->FresnelR0 = XMFLOAT3(0.01f, 0.01f, 0.01f);
 	grass->Roughness = 0.9f;
 

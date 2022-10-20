@@ -445,16 +445,17 @@ void LitColumnsApp::UpdateMainPassCB(const GameTimer& gt)
 	mMainPassCB.Lights[0].FalloffStart = 1;
 	mMainPassCB.Lights[0].FalloffEnd = 20;
 
-	mMainPassCB.Lights[1].Position = { 0.0f, 7.0f, 0.0f };
-	mMainPassCB.Lights[1].Strength = { 0.7f, 0.7f, 0.7f };
+
+	mMainPassCB.Lights[1].Position = { 0.0f, 2.0f, 5.0f };
+	mMainPassCB.Lights[1].Strength = { 0.3f, 0.3f, 0.7f };
 	mMainPassCB.Lights[1].FalloffStart = 1;
 	mMainPassCB.Lights[1].FalloffEnd = 20;
 
-
-	mMainPassCB.Lights[2].Position = { 0.0f, 2.0f, 5.0f };
-	mMainPassCB.Lights[2].Strength = { 0.3f, 0.3f, 0.7f };
+	mMainPassCB.Lights[2].Position = { 5.0f, 4.0f, 0.0f };
+	mMainPassCB.Lights[2].Strength = { 1.0f, 1.0f, 1.0f };
 	mMainPassCB.Lights[2].FalloffStart = 1;
-	mMainPassCB.Lights[2].FalloffEnd = 20;
+	mMainPassCB.Lights[2].FalloffEnd = 2000;
+	mMainPassCB.Lights[2].SpotPower = 1;
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
 	currPassCB->CopyData(0, mMainPassCB);
