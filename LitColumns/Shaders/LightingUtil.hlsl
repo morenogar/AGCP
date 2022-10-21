@@ -14,6 +14,12 @@ struct Light
     float FalloffEnd;   // point/spot light only
     float3 Position;    // point light only
     float SpotPower;    // spot light only
+    float constant;
+    float lineard;
+    float quadratic ;
+    float inner_coone;
+    float3 color;
+    float outer_coone;
 };
 
 struct Material
@@ -97,7 +103,7 @@ float3 ComputePointLight(Light L, Material mat, float3 pos, float3 normal, float
     float3 lightStrength = L.Strength * ndotl;
 
     // Attenuate light by distance.
-    float att = 1.0 / (/*light.constant*/ 0.001f + /*light.linear*/ 0.09f * d + /*light.quadratic*/ 0.032f * (d * d));
+    float att = 1.0 / (L.constant + L.lineard * d + L.quadratic * (d * d));
     lightStrength *= att;
 
     return BlinnPhong(lightStrength, lightVec, normal, toEye, mat);
@@ -126,7 +132,7 @@ float3 ComputeSpotLight(Light L, Material mat, float3 pos, float3 normal, float3
     float3 lightStrength = L.Strength * ndotl;
 
     // Attenuate light by distance.
-    float att = 1.0 / (/*light.constant*/ 0.001f + /*light.linear*/ 0.09f * d + /*light.quadratic*/ 0.032f * (d * d));
+    float att = 1.0 / (L.constant + L.lineard * d + L.quadratic * (d * d));
 
     // Scale by spotlight
     float spotFactor = pow(max(dot(-lightVec, L.Direction), 0.0f), L.SpotPower);
@@ -134,8 +140,8 @@ float3 ComputeSpotLight(Light L, Material mat, float3 pos, float3 normal, float3
     //Open gl
 
     float theta = dot(d, normalize(-L.Direction));
-    float epsilon = /*light.inner_coone*/ 0.91 - /*light.outer_coone*/0.82;
-    float intensity = clamp((theta - /*light.outer_coone*/0.82) / epsilon, 0.0, 1.0);
+    float epsilon = L.inner_coone - L.outer_coone;
+    float intensity = clamp((theta - L.outer_coone) / epsilon, 0.0, 1.0);
 
 
 

@@ -210,9 +210,9 @@ void LitColumnsApp::Update(const GameTimer& gt)
 	OnKeyboardInput(gt);
 	UpdateCamera(gt);
 	int j = 0;
-	for (int i = 3; i < num_of_skulls + 3; i++) {
-		XMMATRIX globalRotate = XMMatrixRotationY(gt.TotalTime());
-		XMStoreFloat4x4(&mAllRitems[i]->World, XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(skull_pos[j].x, skull_pos[j].y, skull_pos[j].z) * globalRotate);
+	for (int i = 2; i < num_of_skulls + 2; i++) {
+		XMMATRIX globalRotate = XMMatrixRotationY(gt.TotalTime()*(j+1));
+		XMStoreFloat4x4(&mAllRitems[i]->World, XMMatrixScaling(0.3f, 0.3f, 0.3f) * XMMatrixTranslation(skull_pos[j].x, skull_pos[j].y, skull_pos[j].z) * globalRotate);
 		mAllRitems[i]->NumFramesDirty = gNumFrameResources;
 		j++;
 	}
@@ -257,7 +257,7 @@ void LitColumnsApp::Draw(const GameTimer& gt)
 		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
 	// Clear the back buffer and depth buffer.
-	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::LightSteelBlue, 0, nullptr);
+	mCommandList->ClearRenderTargetView(CurrentBackBufferView(), Colors::Black, 0, nullptr);
 	mCommandList->ClearDepthStencilView(DepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 	// Specify the buffers we are going to render to.
@@ -439,23 +439,132 @@ void LitColumnsApp::UpdateMainPassCB(const GameTimer& gt)
 	mMainPassCB.DeltaTime = gt.DeltaTime();
 	mMainPassCB.AmbientLight = { 0.01f, 0.01f, 0.01f, 1.0f };
 
-
-	mMainPassCB.Lights[0].Position = { 0.0f, 2.0f, -5.0f };
-	mMainPassCB.Lights[0].Strength = { 0.7f, 0.3f, 0.3f };
+	//QUADRATIC
+	mMainPassCB.Lights[0].Position = { 0.0f, 2.0f, -40.0f };
+	mMainPassCB.Lights[0].Strength = { 1.0f, 0.7f, 0.7f };
 	mMainPassCB.Lights[0].FalloffStart = 1;
 	mMainPassCB.Lights[0].FalloffEnd = 20;
+	mMainPassCB.Lights[0].constant = 1.0f;
+	mMainPassCB.Lights[0].lineard = 0.07f;
+	mMainPassCB.Lights[0].quadratic = 0.2f;
 
-
-	mMainPassCB.Lights[1].Position = { 0.0f, 2.0f, 5.0f };
-	mMainPassCB.Lights[1].Strength = { 0.3f, 0.3f, 0.7f };
+	mMainPassCB.Lights[1].Position = { 30.0f, 2.0f, -40.0f };
+	mMainPassCB.Lights[1].Strength = { 1.0f, 0.7f,0.7f };
 	mMainPassCB.Lights[1].FalloffStart = 1;
 	mMainPassCB.Lights[1].FalloffEnd = 20;
+	mMainPassCB.Lights[1].constant = 1.0f;
+	mMainPassCB.Lights[1].lineard = 0.07f;
+	mMainPassCB.Lights[1].quadratic = 0.017f;
 
-	mMainPassCB.Lights[2].Position = { 5.0f, 4.0f, 0.0f };
-	mMainPassCB.Lights[2].Strength = { 1.0f, 1.0f, 1.0f };
+	mMainPassCB.Lights[2].Position = { 60.0f, 2.0f, -40.0f };
+	mMainPassCB.Lights[2].Strength = { 1.0, 0.7f, 0.7f };
 	mMainPassCB.Lights[2].FalloffStart = 1;
-	mMainPassCB.Lights[2].FalloffEnd = 2000;
-	mMainPassCB.Lights[2].SpotPower = 1;
+	mMainPassCB.Lights[2].FalloffEnd = 20;
+	mMainPassCB.Lights[2].constant = 1.0f;
+	mMainPassCB.Lights[2].lineard = 0.07f;
+	mMainPassCB.Lights[2].quadratic = 0.001f;
+
+
+	//LINEARD
+	mMainPassCB.Lights[3].Position = { 0.0f, 2.0f, 40.0f };
+	mMainPassCB.Lights[3].Strength = { 0.7f, 1.0f, 0.7f };
+	mMainPassCB.Lights[3].FalloffStart = 1;
+	mMainPassCB.Lights[3].FalloffEnd = 20;
+	mMainPassCB.Lights[3].constant = 1.0f;
+	mMainPassCB.Lights[3].lineard = 2.0f;
+	mMainPassCB.Lights[3].quadratic = 0.017f;
+
+	mMainPassCB.Lights[4].Position = { 30.0f, 2.0f, 40.0f };
+	mMainPassCB.Lights[4].Strength = { 0.7f, 1.0f, 0.7f };
+	mMainPassCB.Lights[4].FalloffStart = 1;
+	mMainPassCB.Lights[4].FalloffEnd = 20;
+	mMainPassCB.Lights[4].constant = 1.0f;
+	mMainPassCB.Lights[4].lineard = 0.8f;
+	mMainPassCB.Lights[4].quadratic = 0.017f;
+
+	mMainPassCB.Lights[5].Position = { 60.0f, 2.0f, 40.0f };
+	mMainPassCB.Lights[5].Strength = { 0.7f, 1.0f, 0.7f };
+	mMainPassCB.Lights[5].FalloffStart = 1;
+	mMainPassCB.Lights[5].FalloffEnd = 20;
+	mMainPassCB.Lights[5].constant = 1.0f;
+	mMainPassCB.Lights[5].lineard = 0.001f;
+	mMainPassCB.Lights[5].quadratic = 0.017f;
+
+
+	//CONSTANT
+	mMainPassCB.Lights[6].Position = { 0.0f, 2.0f, 0.0f };
+	mMainPassCB.Lights[6].Strength = { 1.0f, 1.0f, 1.0f };
+	mMainPassCB.Lights[6].FalloffStart = 1;
+	mMainPassCB.Lights[6].FalloffEnd = 200;
+	mMainPassCB.Lights[6].SpotPower = 1;
+	mMainPassCB.Lights[6].constant = 4.0f;
+	mMainPassCB.Lights[6].lineard = 0.2f;
+	mMainPassCB.Lights[6].quadratic = 0.017f;
+
+	mMainPassCB.Lights[7].Position = { 30.0f, 4.0f, 0.0f };
+	mMainPassCB.Lights[7].Strength = { 1.0f, 1.0f, 1.0f };
+	mMainPassCB.Lights[7].FalloffStart = 1;
+	mMainPassCB.Lights[7].FalloffEnd = 2000;
+	mMainPassCB.Lights[7].SpotPower = 1;
+	mMainPassCB.Lights[7].constant = 1.0f;
+	mMainPassCB.Lights[7].lineard = 0.2f;
+	mMainPassCB.Lights[7].quadratic = 0.017f;
+
+	mMainPassCB.Lights[8].Position = { 60.0f, 4.0f, 0.0f };
+	mMainPassCB.Lights[8].Strength = { 1.0f, 1.0f, 1.0f };
+	mMainPassCB.Lights[8].FalloffStart = 1;
+	mMainPassCB.Lights[8].FalloffEnd = 2000;
+	mMainPassCB.Lights[8].SpotPower = 1;
+	mMainPassCB.Lights[8].constant = 0.01f;
+	mMainPassCB.Lights[8].lineard = 0.2f;
+	mMainPassCB.Lights[8].quadratic = 0.017f;
+
+
+	//ALL
+	mMainPassCB.Lights[9].Position = { -60.0f, 2.0f, -30.0f };
+	mMainPassCB.Lights[9].Strength = { 1.0f, 0.2f, 0.2f };
+	mMainPassCB.Lights[9].FalloffStart = 1;
+	mMainPassCB.Lights[9].FalloffEnd = 200;
+	mMainPassCB.Lights[9].SpotPower = 1;
+	mMainPassCB.Lights[9].constant = 4.0f;
+	mMainPassCB.Lights[9].lineard = 4.0f;
+	mMainPassCB.Lights[9].quadratic = 0.2f;
+
+	mMainPassCB.Lights[10].Position = { -60.0f, 4.0f, 0.0f };
+	mMainPassCB.Lights[10].Strength = { 1.0f,  0.2f, 0.2f };
+	mMainPassCB.Lights[10].FalloffStart = 1;
+	mMainPassCB.Lights[10].FalloffEnd = 2000;
+	mMainPassCB.Lights[10].SpotPower = 1;
+	mMainPassCB.Lights[10].constant = 1.0f;
+	mMainPassCB.Lights[10].lineard = 0.5f;
+	mMainPassCB.Lights[10].quadratic = 0.017f;
+
+	mMainPassCB.Lights[11].Position = { -60.0f, 4.0f, 30.0f };
+	mMainPassCB.Lights[11].Strength = { 1.0f,  0.2f, 0.2f };
+	mMainPassCB.Lights[11].FalloffStart = 1;
+	mMainPassCB.Lights[11].FalloffEnd = 2000;
+	mMainPassCB.Lights[11].SpotPower = 1;
+	mMainPassCB.Lights[11].constant = 0.1f;
+	mMainPassCB.Lights[11].lineard = 0.01f;
+	mMainPassCB.Lights[11].quadratic = 0.001f;
+
+
+	//SPOT
+	mMainPassCB.Lights[12].Position = { -20.0f, 5.0f, -20.0f };
+	mMainPassCB.Lights[12].Strength = { 3.0f, 3.0f, 3.0f };
+	mMainPassCB.Lights[12].FalloffStart = 1;
+	mMainPassCB.Lights[12].FalloffEnd = 2000;
+	mMainPassCB.Lights[12].SpotPower = 10;
+	mMainPassCB.Lights[12].inner_coone = 20;
+	mMainPassCB.Lights[12].outer_coone = 40;
+
+	mMainPassCB.Lights[13].Position = { -20.0f, 5.0f, -10.0f };
+	mMainPassCB.Lights[13].Strength = { 3.0f, 3.0f, 3.0f };
+	mMainPassCB.Lights[13].FalloffStart = 1;
+	mMainPassCB.Lights[13].FalloffEnd = 2000;
+	mMainPassCB.Lights[13].SpotPower = 10;
+	mMainPassCB.Lights[12].inner_coone = 0;
+	mMainPassCB.Lights[12].outer_coone = 0;
 
 	auto currPassCB = mCurrFrameResource->PassCB.get();
 	currPassCB->CopyData(0, mMainPassCB);
@@ -516,7 +625,7 @@ void LitColumnsApp::BuildShapeGeometry()
 {
 	GeometryGenerator geoGen;
 	GeometryGenerator::MeshData box = geoGen.CreateBox(1.5f, 0.5f, 1.5f, 3);
-	GeometryGenerator::MeshData grid = geoGen.CreateGrid(20.0f, 30.0f, 60, 40);
+	GeometryGenerator::MeshData grid = geoGen.CreateGrid(200.0f, 200.0f, 60, 40);
 	GeometryGenerator::MeshData sphere = geoGen.CreateSphere(0.5f, 20, 20);
 	GeometryGenerator::MeshData cylinder = geoGen.CreateCylinder(0.5f, 0.3f, 3.0f, 20, 20);
 
@@ -805,7 +914,7 @@ void LitColumnsApp::BuildRenderItems()
 
 	auto gridRitem = std::make_unique<RenderItem>();
 	gridRitem->World = MathHelper::Identity4x4();
-	XMStoreFloat4x4(&gridRitem->TexTransform, XMMatrixScaling(8.0f, 8.0f, 1.0f));
+	XMStoreFloat4x4(&gridRitem->TexTransform, XMMatrixScaling(299.0f, 8.0f, 1.0f));
 	gridRitem->ObjCBIndex = 1;
 	gridRitem->Mat = mMaterials["tile0"].get();
 	gridRitem->Geo = mGeometries["shapeGeo"].get();
@@ -815,20 +924,9 @@ void LitColumnsApp::BuildRenderItems()
 	gridRitem->BaseVertexLocation = gridRitem->Geo->DrawArgs["grid"].BaseVertexLocation;
 	mAllRitems.push_back(std::move(gridRitem));
 
-	auto skullRitem = std::make_unique<RenderItem>();
-	XMStoreFloat4x4(&skullRitem->World, XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(0.0f, 1.0f, 0.0f));
-	skullRitem->TexTransform = MathHelper::Identity4x4();
-	skullRitem->ObjCBIndex = 2;
-	skullRitem->Mat = mMaterials["skullMat"].get();
-	skullRitem->Geo = mGeometries["skullGeo"].get();
-	skullRitem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	skullRitem->IndexCount = skullRitem->Geo->DrawArgs["skull"].IndexCount;
-	skullRitem->StartIndexLocation = skullRitem->Geo->DrawArgs["skull"].StartIndexLocation;
-	skullRitem->BaseVertexLocation = skullRitem->Geo->DrawArgs["skull"].BaseVertexLocation;
-	mAllRitems.push_back(std::move(skullRitem));
 
 	XMMATRIX brickTexTransform = XMMatrixScaling(1.0f, 1.0f, 1.0f);
-	UINT objCBIndex = 3;
+	UINT objCBIndex = 2;
 
 	for (int i = 0; i < num_of_skulls; ++i) {
 
@@ -836,7 +934,7 @@ void LitColumnsApp::BuildRenderItems()
 		skull_pos[i].x = rand() % 10;
 		skull_pos[i].y = rand() % 10;
 		skull_pos[i].z = rand() % 10;
-		XMStoreFloat4x4(&skullRitem->World, XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixTranslation(skull_pos[i].x, skull_pos[i].y, skull_pos[i].z));
+		XMStoreFloat4x4(&skullRitem->World, XMMatrixScaling(0.3f, 0.3f, 0.3f) * XMMatrixTranslation(skull_pos[i].x, skull_pos[i].y, skull_pos[i].z));
 		skullRitem->TexTransform = MathHelper::Identity4x4();
 		skullRitem->ObjCBIndex = objCBIndex++;
 		skullRitem->Mat = mMaterials["skullMat"].get();
