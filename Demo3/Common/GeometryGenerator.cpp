@@ -443,6 +443,7 @@ GeometryGenerator::MeshData GeometryGenerator::CreateCylinder(float bottomRadius
 			XMVECTOR B = XMLoadFloat3(&bitangent);
 			XMVECTOR N = XMVector3Normalize(XMVector3Cross(T, B));
 			XMStoreFloat3(&vertex.Normal, N);
+			XMStoreFloat3(&vertex.BiTangentU, B);
 
 			meshData.Vertices.push_back(vertex);
 		}

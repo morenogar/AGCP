@@ -24,6 +24,7 @@ struct VertexIn
   float3 NormalL : NORMAL;
 	float2 TexC    : TEXCOORD;
 	float3 TangentU : TANGENT;
+	float3 BiTangentU : BITANGENT;
 };
 
 struct VertexOut
@@ -33,6 +34,7 @@ struct VertexOut
   float3 NormalW : NORMAL;
 	float3 TangentW : TANGENT;
 	float2 TexC    : TEXCOORD;
+	float3 BiTangentW : BITANGENT;
 };
 
 
@@ -51,6 +53,8 @@ VertexOut VS(VertexIn vin)
     vout.NormalW = mul(vin.NormalL, (float3x3)gWorld);
 	
 	vout.TangentW = mul(vin.TangentU, (float3x3)gWorld);
+
+	vout.BiTangentW = mul(vin.BiTangentU, (float3x3)gWorld);
 
     // Transform to homogeneous clip space.
     vout.PosH = mul(posW, gViewProj);
@@ -76,10 +80,23 @@ float4 PS(VertexOut pin) : SV_Target
 	// Interpolating normal can unnormalize it, so renormalize it.
     pin.NormalW = normalize(pin.NormalW);
 
+		float3 T = normalize(pin.TangentW);
+		float3 N = normalize(pin.NormalW);
+		float3 B = normalize(pin.BiTangentW);
+
+		float3x3 TBN = transpose(float3x3(T, B, N));
+
 		float3 toEyeW = normalize(gEyePosW - pin.PosW);
 
-		float height = gTextureMaps[normalMapIndex +1].Sample(gsamAnisotropicWrap, pin.TexC).r;
-		float2 texCoords = pin.TexC - toEyeW.xy * (height * 0.1);
+		float3 TangentViewPos = mul(TBN, gEyePosW);
+		float3 TangentFragPos = mul(TBN, pin.PosW);
+
+		float3 viewDir = normalize(TangentViewPos - TangentFragPos);
+
+		float4 height = gTextureMaps[normalMapIndex +1].Sample(gsamAnisotropicWrap, pin.TexC);
+
+		float2 p = viewDir.xy / viewDir.z * (height.r * 0.1);
+		float2 texCoords = pin.TexC - p;
 
 		if (texCoords.x > 1.0 || texCoords.y > 1.0 || texCoords.x < 0.0 || texCoords.y < 0.0) {
 			if (gObjPad0 == 1) {
@@ -115,7 +132,7 @@ float4 PS(VertexOut pin) : SV_Target
 	float3 r = reflect(-toEyeW, bumpedNormalW);
 	float4 reflectionColor = gCubeMap.Sample(gsamLinearWrap, r);
 	float3 fresnelFactor = SchlickFresnel(fresnelR0, bumpedNormalW, r);
-    litColor.rgb += shininess * fresnelFactor * reflectionColor.rgb;
+    litColor.rgb += shininess * fresnelFactor * reflectionColor.rgb * 0.1;
 	
     // Common convention to take alpha from diffuse albedo.
     litColor.a = diffuseAlbedo.a;

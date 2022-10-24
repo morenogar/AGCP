@@ -50,6 +50,7 @@ public:
         DirectX::XMFLOAT3 Position;
         DirectX::XMFLOAT3 Normal;
         DirectX::XMFLOAT3 TangentU;
+				DirectX::XMFLOAT3 BiTangentU;
         DirectX::XMFLOAT2 TexC;
 	};
 
