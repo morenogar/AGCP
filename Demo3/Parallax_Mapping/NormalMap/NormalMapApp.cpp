@@ -220,18 +220,11 @@ void NormalMapApp::Update(const GameTimer& gt)
 
 		XMMATRIX gridRitemlRot = XMMatrixRotationX(-1.55f);
 
-		XMStoreFloat4x4(&mAllRitems[1]->World, XMMatrixScaling(0.5f, 0.5f, 0.4f) * XMMatrixTranslation(0.0f, 0.0f, 0.0f) * gridRitemlRot );
+		XMStoreFloat4x4(&mAllRitems[1]->World, XMMatrixScaling(2.5f, 2.5f, 2.4f) * XMMatrixTranslation(0.0f, 0.0f, 0.0f) * gridRitemlRot );
 		mAllRitems[1]->NumFramesDirty = gNumFrameResources;
 
-		XMStoreFloat4x4(&mAllRitems[2]->World, XMMatrixScaling(0.5f, 0.5f, 0.4f) * XMMatrixTranslation(0.0f, 0.0f, 0.0f) * gridRitem2lRot );
+		XMStoreFloat4x4(&mAllRitems[2]->World, XMMatrixScaling(2.5f, 2.5f, 2.4f) * gridRitemlRot * XMMatrixTranslation(12.0f, 0.0f, 0.0f) );
 		mAllRitems[2]->NumFramesDirty = gNumFrameResources;
-
-
-		XMStoreFloat4x4(&mAllRitems[3]->World, XMMatrixScaling(0.5f, 0.5f, 0.4f) * gridRitemlRot * XMMatrixTranslation(12.0f, 0.0f, 0.0f) );
-		mAllRitems[3]->NumFramesDirty = gNumFrameResources;
-
-		XMStoreFloat4x4(&mAllRitems[4]->World, XMMatrixScaling(0.5f, 0.5f, 0.4f) * gridRitem2lRot  * XMMatrixTranslation(12.0f, 0.0f, 0.0f) );
-		mAllRitems[4]->NumFramesDirty = gNumFrameResources;
 
     // Cycle through the circular frame resource array.
     mCurrFrameResourceIndex = (mCurrFrameResourceIndex + 1) % gNumFrameResources;
@@ -637,7 +630,7 @@ void NormalMapApp::BuildShadersAndInputLayout()
         { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 44, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
     };
 }
 
@@ -943,29 +936,29 @@ void NormalMapApp::BuildRenderItems()
 	gridRitem->Mat = mMaterials["bricks0"].get();
 	gridRitem->Geo = mGeometries["shapeGeo"].get();
 	gridRitem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	gridRitem->IndexCount = gridRitem->Geo->DrawArgs["grid"].IndexCount;
-	gridRitem->StartIndexLocation = gridRitem->Geo->DrawArgs["grid"].StartIndexLocation;
-	gridRitem->BaseVertexLocation = gridRitem->Geo->DrawArgs["grid"].BaseVertexLocation;
+	gridRitem->IndexCount = gridRitem->Geo->DrawArgs["box"].IndexCount;
+	gridRitem->StartIndexLocation = gridRitem->Geo->DrawArgs["box"].StartIndexLocation;
+	gridRitem->BaseVertexLocation = gridRitem->Geo->DrawArgs["box"].BaseVertexLocation;
 
 	mRitemLayer[(int)RenderLayer::Opaque].push_back(gridRitem.get());
 	mAllRitems.push_back(std::move(gridRitem));
 
 
-	auto gridRitem2 = std::make_unique<RenderItem>();
-	gridRitem2->World = MathHelper::Identity4x4();
-	XMStoreFloat4x4(&gridRitem2->TexTransform, brickTexTransform);
-	XMStoreFloat4x4(&gridRitem2->World, XMMatrixScaling(0.5f, 0.5f, 0.4f) * gridRitemlWorld);
-	gridRitem2->ObjCBIndex = 2;
-	gridRitem2->parallax = 1;
-	gridRitem2->Mat = mMaterials["bricks0"].get();
-	gridRitem2->Geo = mGeometries["shapeGeo"].get();
-	gridRitem2->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	gridRitem2->IndexCount = gridRitem2->Geo->DrawArgs["grid"].IndexCount;
-	gridRitem2->StartIndexLocation = gridRitem2->Geo->DrawArgs["grid"].StartIndexLocation;
-	gridRitem2->BaseVertexLocation = gridRitem2->Geo->DrawArgs["grid"].BaseVertexLocation;
+	//auto gridRitem2 = std::make_unique<RenderItem>();
+	//gridRitem2->World = MathHelper::Identity4x4();
+	//XMStoreFloat4x4(&gridRitem2->TexTransform, brickTexTransform);
+	//XMStoreFloat4x4(&gridRitem2->World, XMMatrixScaling(0.5f, 0.5f, 0.4f) * gridRitemlWorld);
+	//gridRitem2->ObjCBIndex = 2;
+	//gridRitem2->parallax = 1;
+	//gridRitem2->Mat = mMaterials["bricks0"].get();
+	//gridRitem2->Geo = mGeometries["shapeGeo"].get();
+	//gridRitem2->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	//gridRitem2->IndexCount = gridRitem2->Geo->DrawArgs["box"].IndexCount;
+	//gridRitem2->StartIndexLocation = gridRitem2->Geo->DrawArgs["box"].StartIndexLocation;
+	//gridRitem2->BaseVertexLocation = gridRitem2->Geo->DrawArgs["box"].BaseVertexLocation;
 
-	mRitemLayer[(int)RenderLayer::Opaque].push_back(gridRitem2.get());
-	mAllRitems.push_back(std::move(gridRitem2));
+	//mRitemLayer[(int)RenderLayer::Opaque].push_back(gridRitem2.get());
+	//mAllRitems.push_back(std::move(gridRitem2));
 
 
 	//NO PARALLAX
@@ -973,34 +966,34 @@ void NormalMapApp::BuildRenderItems()
 	gridRitem3->World = MathHelper::Identity4x4();
 	XMStoreFloat4x4(&gridRitem3->TexTransform, brickTexTransform);
 	XMStoreFloat4x4(&gridRitem3->World, XMMatrixScaling(0.5f, 0.5f, 0.4f) * gridRitemlWorld);
-	gridRitem3->ObjCBIndex = 3;
+	gridRitem3->ObjCBIndex = 2;
 	gridRitem3->parallax = 0;
 	gridRitem3->Mat = mMaterials["bricks0"].get();
 	gridRitem3->Geo = mGeometries["shapeGeo"].get();
 	gridRitem3->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	gridRitem3->IndexCount = gridRitem3->Geo->DrawArgs["grid"].IndexCount;
-	gridRitem3->StartIndexLocation = gridRitem3->Geo->DrawArgs["grid"].StartIndexLocation;
-	gridRitem3->BaseVertexLocation = gridRitem3->Geo->DrawArgs["grid"].BaseVertexLocation;
+	gridRitem3->IndexCount = gridRitem3->Geo->DrawArgs["box"].IndexCount;
+	gridRitem3->StartIndexLocation = gridRitem3->Geo->DrawArgs["box"].StartIndexLocation;
+	gridRitem3->BaseVertexLocation = gridRitem3->Geo->DrawArgs["box"].BaseVertexLocation;
 
 	mRitemLayer[(int)RenderLayer::Opaque].push_back(gridRitem3.get());
 	mAllRitems.push_back(std::move(gridRitem3));
 
 
-	auto gridRitem4 = std::make_unique<RenderItem>();
-	gridRitem4->World = MathHelper::Identity4x4();
-	XMStoreFloat4x4(&gridRitem4->TexTransform, brickTexTransform);
-	XMStoreFloat4x4(&gridRitem4->World, XMMatrixScaling(0.5f, 0.5f, 0.4f) * gridRitemlWorld);
-	gridRitem4->ObjCBIndex = 4;
-	gridRitem4->parallax = 0;
-	gridRitem4->Mat = mMaterials["bricks0"].get();
-	gridRitem4->Geo = mGeometries["shapeGeo"].get();
-	gridRitem4->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	gridRitem4->IndexCount = gridRitem4->Geo->DrawArgs["grid"].IndexCount;
-	gridRitem4->StartIndexLocation = gridRitem4->Geo->DrawArgs["grid"].StartIndexLocation;
-	gridRitem4->BaseVertexLocation = gridRitem4->Geo->DrawArgs["grid"].BaseVertexLocation;
+	//auto gridRitem4 = std::make_unique<RenderItem>();
+	//gridRitem4->World = MathHelper::Identity4x4();
+	//XMStoreFloat4x4(&gridRitem4->TexTransform, brickTexTransform);
+	//XMStoreFloat4x4(&gridRitem4->World, XMMatrixScaling(0.5f, 0.5f, 0.4f) * gridRitemlWorld);
+	//gridRitem4->ObjCBIndex = 4;
+	//gridRitem4->parallax = 0;
+	//gridRitem4->Mat = mMaterials["bricks0"].get();
+	//gridRitem4->Geo = mGeometries["shapeGeo"].get();
+	//gridRitem4->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	//gridRitem4->IndexCount = gridRitem4->Geo->DrawArgs["box"].IndexCount;
+	//gridRitem4->StartIndexLocation = gridRitem4->Geo->DrawArgs["box"].StartIndexLocation;
+	//gridRitem4->BaseVertexLocation = gridRitem4->Geo->DrawArgs["box"].BaseVertexLocation;
 
-	mRitemLayer[(int)RenderLayer::Opaque].push_back(gridRitem4.get());
-	mAllRitems.push_back(std::move(gridRitem4));
+	//mRitemLayer[(int)RenderLayer::Opaque].push_back(gridRitem4.get());
+	//mAllRitems.push_back(std::move(gridRitem4));
 
 
 	/*XMMATRIX brickTexTransform = XMMatrixScaling(1.0f, 2.0f, 1.0f);

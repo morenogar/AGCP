@@ -41,10 +41,12 @@ public:
 			float px, float py, float pz, 
 			float nx, float ny, float nz,
 			float tx, float ty, float tz,
+			float btx, float bty, float btz,
 			float u, float v) : 
             Position(px,py,pz), 
             Normal(nx,ny,nz),
-			TangentU(tx, ty, tz), 
+						TangentU(tx, ty, tz),
+						BiTangentU(btx, bty, btz),
             TexC(u,v){}
 
         DirectX::XMFLOAT3 Position;

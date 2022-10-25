@@ -84,7 +84,7 @@ float4 PS(VertexOut pin) : SV_Target
 		float3 N = normalize(pin.NormalW);
 		float3 B = normalize(pin.BiTangentW);
 
-		float3x3 TBN = transpose(float3x3(T, B, N));
+		float3x3 TBN = float3x3(T, B, N);
 
 		float3 toEyeW = normalize(gEyePosW - pin.PosW);
 
