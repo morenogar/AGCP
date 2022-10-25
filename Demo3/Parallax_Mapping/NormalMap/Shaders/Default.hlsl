@@ -84,7 +84,7 @@ float4 PS(VertexOut pin) : SV_Target
 		float3 N = normalize(pin.NormalW);
 		float3 B = normalize(pin.BiTangentW);
 
-		float3x3 TBN = float3x3(T, B, N);
+		float3x3 TBN = transpose(float3x3(T, B, N));
 
 		float3 toEyeW = normalize(gEyePosW - pin.PosW);
 
@@ -104,15 +104,19 @@ float4 PS(VertexOut pin) : SV_Target
 			}
 		}
 
+		if(gObjPad0 != 1){
+			texCoords = pin.TexC;
+		}
+
 	
-	float4 normalMapSample = gTextureMaps[normalMapIndex].Sample(gsamAnisotropicWrap, pin.TexC);
+	float4 normalMapSample = gTextureMaps[normalMapIndex].Sample(gsamAnisotropicWrap, texCoords);
 	float3 bumpedNormalW = NormalSampleToWorldSpace(normalMapSample.rgb, pin.NormalW, pin.TangentW);
 
 	// Uncomment to turn off normal mapping.
 	//bumpedNormalW = pin.NormalW;
 
 	// Dynamically look up the texture in the array.
-	diffuseAlbedo *= gTextureMaps[diffuseMapIndex].Sample(gsamAnisotropicWrap, pin.TexC);
+	diffuseAlbedo *= gTextureMaps[diffuseMapIndex].Sample(gsamAnisotropicWrap, texCoords);
 
     // Vector from point being lit to eye. 
 

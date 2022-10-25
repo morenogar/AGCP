@@ -220,10 +220,10 @@ void NormalMapApp::Update(const GameTimer& gt)
 
 		XMMATRIX gridRitemlRot = XMMatrixRotationX(-1.55f);
 
-		XMStoreFloat4x4(&mAllRitems[1]->World, XMMatrixScaling(2.5f, 2.5f, 2.4f) * XMMatrixTranslation(0.0f, 0.0f, 0.0f) * gridRitemlRot );
+		XMStoreFloat4x4(&mAllRitems[1]->World, XMMatrixScaling(0.5f, 0.5f, 0.4f) * XMMatrixTranslation(0.0f, 0.0f, 0.0f) * gridRitemlRot );
 		mAllRitems[1]->NumFramesDirty = gNumFrameResources;
 
-		XMStoreFloat4x4(&mAllRitems[2]->World, XMMatrixScaling(2.5f, 2.5f, 2.4f) * gridRitemlRot * XMMatrixTranslation(12.0f, 0.0f, 0.0f) );
+		XMStoreFloat4x4(&mAllRitems[2]->World, XMMatrixScaling(0.5f, 0.5f, 0.4f) * gridRitemlRot * XMMatrixTranslation(12.0f, 0.0f, 0.0f) );
 		mAllRitems[2]->NumFramesDirty = gNumFrameResources;
 
     // Cycle through the circular frame resource array.
@@ -487,9 +487,9 @@ void NormalMapApp::LoadTextures()
 	
 	std::vector<std::wstring> texFilenames = 
 	{
-		L"../../Textures/bricks_albedo.dds",
-		L"../../Textures/bricks_normal.dds",
-		L"../../Textures/bricks_depth.dds",
+		L"../../Textures/bricks_albedo_2.dds",
+		L"../../Textures/bricks_normal_2.dds",
+		L"../../Textures/bricks_depth_2.dds",
 		L"../../Textures/tile.dds",
 		L"../../Textures/tile_nmap.dds",
 		L"../../Textures/white1x1.dds",
@@ -936,9 +936,9 @@ void NormalMapApp::BuildRenderItems()
 	gridRitem->Mat = mMaterials["bricks0"].get();
 	gridRitem->Geo = mGeometries["shapeGeo"].get();
 	gridRitem->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	gridRitem->IndexCount = gridRitem->Geo->DrawArgs["box"].IndexCount;
-	gridRitem->StartIndexLocation = gridRitem->Geo->DrawArgs["box"].StartIndexLocation;
-	gridRitem->BaseVertexLocation = gridRitem->Geo->DrawArgs["box"].BaseVertexLocation;
+	gridRitem->IndexCount = gridRitem->Geo->DrawArgs["grid"].IndexCount;
+	gridRitem->StartIndexLocation = gridRitem->Geo->DrawArgs["grid"].StartIndexLocation;
+	gridRitem->BaseVertexLocation = gridRitem->Geo->DrawArgs["grid"].BaseVertexLocation;
 
 	mRitemLayer[(int)RenderLayer::Opaque].push_back(gridRitem.get());
 	mAllRitems.push_back(std::move(gridRitem));
@@ -971,9 +971,9 @@ void NormalMapApp::BuildRenderItems()
 	gridRitem3->Mat = mMaterials["bricks0"].get();
 	gridRitem3->Geo = mGeometries["shapeGeo"].get();
 	gridRitem3->PrimitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	gridRitem3->IndexCount = gridRitem3->Geo->DrawArgs["box"].IndexCount;
-	gridRitem3->StartIndexLocation = gridRitem3->Geo->DrawArgs["box"].StartIndexLocation;
-	gridRitem3->BaseVertexLocation = gridRitem3->Geo->DrawArgs["box"].BaseVertexLocation;
+	gridRitem3->IndexCount = gridRitem3->Geo->DrawArgs["grid"].IndexCount;
+	gridRitem3->StartIndexLocation = gridRitem3->Geo->DrawArgs["grid"].StartIndexLocation;
+	gridRitem3->BaseVertexLocation = gridRitem3->Geo->DrawArgs["grid"].BaseVertexLocation;
 
 	mRitemLayer[(int)RenderLayer::Opaque].push_back(gridRitem3.get());
 	mAllRitems.push_back(std::move(gridRitem3));
